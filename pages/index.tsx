@@ -3,11 +3,7 @@ import Head from 'next/head';
 
 export default function Home() {
   const [websiteIdea, setWebsiteIdea] = useState('');
-  const [headerNav, setHeaderNav] = useState('');
-  const [footer, setFooter] = useState('');
-  const [hero, setHero] = useState('');
-  const [buttonQuote, setButtonQuote] = useState('');
-  const [contentSection, setContentSection] = useState('');
+  const [generatedContent, setGeneratedContent] = useState('');
   const [imagePrompt, setImagePrompt] = useState('');
   const [imageUrls, setImageUrls] = useState([]);
   const [imagePlaceholders, setImagePlaceholders] = useState([]);
@@ -15,28 +11,19 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const [imagesLoading, setImagesLoading] = useState(false);
 
-  const designGuidelines = "; return html with proper js and tailwinds functionality as a response. Make sure you use modern design with rounded edges, drop shadows, unified color palette of 3 colors, buttons scale on hover. Use FontAwesome for icons (<link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css\"> and any font use GoogleFont. Default to Raleway font.everything needs padding of 6px and margin of 5px. should be mobile friendly too.; make sure to add descriptive site content based on input, insert placeholders for images in well designed places, we will replace with real urls in image tags. dont leave content empty, dont use lorem ipsum. make it realistic; Now write this part of landing.html. only return html";
-  const insertOneImg = ', Find an elegant way to use this image:'
-  const insertTwoImg = ', Find an elegant way to use these images:'
+  const designGuidelines = "; return html with proper js and tailwinds functionality as a response. Make sure you use modern design with rounded edges, drop shadows, unified color palette of 3 colors, buttons scale on hover. Use FontAwesome for icons (<link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css\"> and any font use GoogleFont.everything needs padding of 8px and margin of 5px. should be mobile friendly too; make sure to add descriptive site content based on input, insert the img urls we pass to you; dont leave content empty--make it realistic; Now write our landing.html, make up stuff if needed for realistic copy; mobile friendly also;";
+  const useImgsPrompt = (imgUrls:string) => `7.find some way to use these images:${imgUrls}`;
+  const insertOneImg = ', Find a good way to use this image:'
+  const insertTwoImg = ', Find a good way to use these images:'
   function extractHTML(response: string) {
     const match = response.match(/```html([\s\S]*?)```/);
     return match ? match[1].trim() : '';
   }
 
-  function getImageTag(numImages, imageIndex, imageUrls) {
-    if (numImages === 1) {
-      return `${insertOneImg} <img src='${imageUrls[imageIndex]}' alt='' />`;
-    } else if (numImages === 2) {
-      return `${insertTwoImg} <img src='${imageUrls[imageIndex]}' alt='' /><img src='${imageUrls[imageIndex + 1]}' alt='' />`;
-    }
-    console.log('numImages, imageIndex, imageUrls', numImages, imageIndex, imageUrls)
-    return '';
-  }
-
   async function makeAPIRequest(payload) {
     try {
 
-      const response = await fetch('https://emojipt-jawaunbrown.replit.app/promptly', {
+      const response = await fetch('https://emojipt-jawaunbrown.replit.app/sitesee', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -52,12 +39,12 @@ export default function Home() {
         return '';
       }
     } catch (error) {
-      console.error('Error processing section:', section.prompt, error);
+      console.error('Error processing section:', error);
     } // End of try-catch block
   }
 
   async function fetchImages(imgPrompt) {
-    const payload = { prompt: imgPrompt, n: 4, size: "1024x1024" }
+    const payload = { prompt: imgPrompt, n: 1, size: "256x256" }
     const response = await fetch('https://emojipt-jawaunbrown.replit.app/gen_image', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -66,8 +53,9 @@ export default function Home() {
     const data = await response.json();
     setImagesLoading(false)
 
-    // Extract the urls from the data array
-    return data.data.map(item => item.url);
+    // Extract the urls from the data array and unescape them
+    const unescapedUrls = data.data.map(item => item.url.replace(/\\/g, ''));
+    return unescapedUrls;
   }
 
   async function getImagePrompt() {
@@ -87,6 +75,7 @@ export default function Home() {
     return shortPrompt;
 
   }
+
   function getShortenedText(input, len) {
     const ssi = input.slice(0, len); + input.slice(input.length - len, input.length)
     return ssi
@@ -96,38 +85,39 @@ export default function Home() {
     setIsLoading(true);
 
     // Get the image prompt based on website idea
-    const newPrompt = await getImagePrompt()
+    // const newPrompt = await getImagePrompt();
 
-    // Indicate we are loading images
-    const fetchedImageUrls = await fetchImages(newPrompt);
-    setImageUrls(fetchedImageUrls);
+    // // Fetch images
+    // const fetchedImageUrls = await fetchImages(newPrompt);
+    // setImageUrls(fetchedImageUrls);
 
-    const sections = [
-      { prompt: `Design the header and navigation section ${designGuidelines}`, setter: setHeaderNav, numImages: 0 },
-      { prompt: `Design a hero section${designGuidelines} ${getImageTag(1, 0, fetchedImageUrls)}`, setter: setHero, numImages: 1 },
-      { prompt: `Create a section with buttons or quotes ${designGuidelines} ${getImageTag(1, 1, fetchedImageUrls)}`, setter: setButtonQuote, numImages: 1 },
-      { prompt: `Design a content section ${designGuidelines} ${getImageTag(2, 2, fetchedImageUrls)}`, setter: setContentSection, numImages: 2 },
-      { prompt: `Design the footer section ${designGuidelines}`, setter: setFooter, numImages: 0 },
-    ];
     const shortenedSiteIdea = getShortenedText(websiteIdea, 500);
-    for (let section of sections) {
+    const imgUrls = imageUrls.join(' ');
+    // Create a single combined prompt for the entire site
+    const combinedPromptContent = ` make a site in html + tailwinds for this site:
+      site idea: ${shortenedSiteIdea};
+      follow these specificiations->
+      1.create a header + navigation section.;
+      2.a hero section with a value prop;
+      3.a section with buttons or quotes;
+      4. a content section.;
+      5.a footer section.;  8..here are some rules for your response: ${designGuidelines};
+    `;
 
-      let promptContent = `site idea: ${shortenedSiteIdea}` + section.prompt;
+    const rawContent = await makeAPIRequest({
+      model: "gpt-3.5-turbo",
+      messages: [
+        { role: "system", content: "You are an html and tailwinds expert that designs beautiful websites using just html and tailwinds." },
+        { role: "user", content: combinedPromptContent }
+      ]
+    });
 
-      const rawContent = await makeAPIRequest({
-        model: "gpt-3.5-turbo",
-        messages: [
-          { role: "system", content: "You are an html and tailwinds expert that designs beautiful websites using just html and tailwinds." },
-          { role: "user", content: promptContent }
-        ]
-      });
-
-      const extractedContent = extractHTML(rawContent);
-      section.setter(extractedContent);
-    }
+    const extractedContent = extractHTML(rawContent).replace(/\\/g, '');
+    setGeneratedContent(extractedContent);
 
     setIsLoading(false);
   }
+
   return (
     <div className="flex flex-col h-screen">
       <Head>
@@ -142,17 +132,13 @@ export default function Home() {
       {/* Rendered Content */}
       <div className="flex-grow flex items-center justify-center rounded-lg p-8 bg-white">
         <div className="shadow-xl rounded-lg w-4/5 bg-grey-500 transform transition-transform duration-100 hover:scale-105">
-          <div dangerouslySetInnerHTML={{ __html: headerNav }}></div>
-          <div dangerouslySetInnerHTML={{ __html: hero }}></div>
-          <div dangerouslySetInnerHTML={{ __html: buttonQuote }}></div>
-          <div dangerouslySetInnerHTML={{ __html: contentSection }}></div>
-          <div dangerouslySetInnerHTML={{ __html: footer }}></div>
+          <div dangerouslySetInnerHTML={{ __html: generatedContent }}></div>
         </div>
       </div>
 
 
       {/* Input, Image Prompt, and Submit */}
-      <div className="w-full p-4 bg-gray-100 fixed bottom-0 left-0 border-t rounded-lg h-auto">
+      < div className="w-full p-4 bg-gray-100 fixed bottom-0 left-0 border-t rounded-lg h-auto" >
         <input
           type="text"
           placeholder="Enter website idea..."
@@ -167,7 +153,7 @@ export default function Home() {
         >
           {imagesLoading ? 'Creating Images...' : isLoading ? 'Generating Content...' : 'Submit'}
         </button>
-      </div>
-    </div>
+      </div >
+    </div >
   );
 }
