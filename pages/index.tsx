@@ -12,7 +12,7 @@ export default function Home() {
   const [imagesLoading, setImagesLoading] = useState(false);
 
   const designGuidelines = "; return html with proper js and tailwinds functionality as a response. Make sure you use modern design with rounded edges, drop shadows, unified color palette of 3 colors, buttons scale on hover. Use FontAwesome for icons (<link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css\"> and any font use GoogleFont.everything needs padding of 8px and margin of 5px. should be mobile friendly too; make sure to add descriptive site content based on input, insert the img urls we pass to you; dont leave content empty--make it realistic; Now write our landing.html, make up stuff if needed for realistic copy; mobile friendly also;";
-  const useImgsPrompt = (imgUrls:string) => `7.find some way to use these images:${imgUrls}`;
+  const useImgsPrompt = (imgUrls: string) => `7.find some way to use these images:${imgUrls}`;
   const insertOneImg = ', Find a good way to use this image:'
   const insertTwoImg = ', Find a good way to use these images:'
   function extractHTML(response: string) {
@@ -119,26 +119,31 @@ export default function Home() {
   }
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-screen sandy">
       <Head>
         <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@800&display=swap" rel="stylesheet" />
       </Head>
 
       {/* Header */}
-      <div className="bg-blue-500 w-full h-12 text-white font-bold text-center pt-3 p-4 tracking-wide" style={{ fontFamily: 'Raleway, sans-serif', fontSize: '24px' }}>
+      <div className="cold w-full h-10 text-white font-bold text-center pt-3 p-8 pt-10 flex shadow-lg items-center justify-center tracking-wide" style={{ fontFamily: 'Raleway, sans-serif', fontSize: '24px' }}>
         SiteSee
       </div>
 
-      {/* Rendered Content */}
-      <div className="flex-grow flex items-center justify-center rounded-lg p-8 bg-white">
-        <div className="shadow-xl rounded-lg w-4/5 bg-grey-500 transform transition-transform duration-100 hover:scale-105">
-          <div dangerouslySetInnerHTML={{ __html: generatedContent }}></div>
-        </div>
+      <div className="flex flex-col">
+        {!generatedContent && <div className="flex m-10 h-auto sitesy">Your Website Will Appear Here 😆💻</div>}
+        {generatedContent &&
+          <div className="flex-grow flex items-center justify-center rounded-lg p-8">
+            <div className="bg-white shadow-xl rounded-lg w-4/5 transform transition-transform duration-100 hover:scale-105">
+              <div dangerouslySetInnerHTML={{ __html: generatedContent }}></div>
+            </div>
+          </div>
+        }
+
+
       </div>
 
-
       {/* Input, Image Prompt, and Submit */}
-      < div className="w-full p-4 bg-gray-100 fixed bottom-0 left-0 border-t rounded-lg h-auto" >
+      < div className="w-full p-4 subs fixed bottom-0 left-0 border-t rounded-lg h-auto shadow-xl" >
         <input
           type="text"
           placeholder="Enter website idea..."
@@ -147,7 +152,7 @@ export default function Home() {
           onChange={(e) => setWebsiteIdea(e.target.value)}
         />
         <button
-          className="w-full px-4 py-2 bg-blue-500 text-white rounded-lg mb-2"
+          className="w-full px-4 py-2 sand text-white rounded-lg mb-2 shadow-xl transform transition-transform duration-100 hover:scale-105"
           onClick={handleSubmit}
           disabled={isLoading || imagesLoading}
         >

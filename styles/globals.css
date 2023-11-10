@@ -1,3 +1,78 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@keyframes gradientMove {
+  0% {
+    background-position: 100% 0; /* Start with the background positioned entirely to the right */
+  }
+  65% {
+    background-position: 0% 0; /* Finish with the background positioned entirely to the left */
+  }
+  100% {
+    background-position: 100% 0; /* Start with the background positioned entirely to the right */
+  }
+  
+}
+
+.sandy{
+  background: linear-gradient(
+    to left,
+    #1064ad,
+    #ddfdfd,
+    #fbffe5,
+    #ffedcc
+  );
+  background-size: 400% 400%;
+  background-blend-mode: color;
+  animation: gradientMove 15s linear infinite;
+}
+
+.sand{
+  background: linear-gradient(
+    to left,
+    #1064ad,
+    #6bffff,
+    #00b3ff
+  );
+  background-size: 400% 400%;
+  background-blend-mode: color;
+  animation: gradientMove 5s linear infinite;
+}
+
+.cool{
+  background: linear-gradient(
+    to left,
+    #a0fdc4,
+    #45b5ae,
+    #86a8c6,
+    #1064ad
+  );
+  animation: gradientMove 1s linear infinite;
+}
+
+.cold{
+  background: #1064ad;
+}
+
+.subs{
+  background: linear-gradient(
+    to top,
+    #b7e6e3,
+    #1064ad
+  );
+  animation: gradientMove 1s linear infinite;
+}
+
+.sitesy{
+  position: relative;
+  font-size:35px;
+  display: flex;
+  padding: 20px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #1064ad;
+  top: 10%; /* add this line to center the heart */
+  transform: translateY(-50%); /* add this line to center the heart */
+}
