@@ -165,7 +165,7 @@ export default function Home() {
         SiteSee
       </div>
 
-      <div className="flex flex-col">
+      <div className="flex flex-col b-20 ">
         {!generatedContent && <div className="flex m-10 h-auto sitesy">Your Website Will Appear Here 😆💻</div>}
         {generatedContent &&
           <div className="flex items-center justify-center rounded-lg p-4">
@@ -188,7 +188,7 @@ export default function Home() {
           onChange={(e) => setWebsiteIdea(e.target.value)}
         />
         <span className="image-upload-control flex flex-grow flex-row w-full h-auto">
-          <input className="flex flex-row w-40 h-auto px-4 py-2 sand text-white rounded-lg mb-2 shadow-xl transform transition-transform duration-100 hover:scale-105 mr-5"
+          <input className="flex flex-row w-40 h-auto px-4 py-2 p-2 sand text-white rounded-lg mb-2 shadow-xl transform transition-transform duration-100 hover:scale-105 mr-5"
             ref={fileInputRef}
             type="file"
             accept="image/*"
