@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+body{
+  font-family: Raleway, sans-serif;
+}
+
 @keyframes gradientMove {
   0% {
     background-position: 100% 0; /* Start with the background positioned entirely to the right */
@@ -12,7 +16,6 @@
   100% {
     background-position: 100% 0; /* Start with the background positioned entirely to the right */
   }
-  
 }
 
 .sandy{
@@ -30,14 +33,22 @@
 
 .sand{
   background: linear-gradient(
-    to left,
-    #1064ad,
-    #6bffff,
-    #00b3ff
+    to right,
+    #044c8b,
+    #00b3ff,
+    #c7ffff
   );
-  background-size: 400% 400%;
+  background-size: 140% 100%;
   background-blend-mode: color;
-  animation: gradientMove 5s linear infinite;
+  /* animation: gradientMove 5s linear infinite; */
+  transition: background-position 0.5s ease;
+  cursor: pointer; /* Change the cursor on hover */
+
+}
+
+.sand:hover {
+  /* Change the background position on hover */
+  background-position: 80% center;
 }
 
 .cool{

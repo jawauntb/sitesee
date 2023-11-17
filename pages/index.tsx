@@ -14,7 +14,6 @@ export default function Home() {
   const [uploadedImage, setUploadedImage] = useState(null);
   const fileInputRef = useRef(null);
 
-
   const designGuidelines = "Create a responsive HTML site with JavaScript and Tailwind CSS. Design must be modern: include rounded edges, drop shadows, and a harmonized color scheme with three colors. Enhance interactivity with hover effects on buttons.Use FontAwesome for icons (<link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css\"> and Google Fonts for typography. Apply consistent padding of 8px and margin of 5px across all elements. Ensure mobile compatibility. The site content should be descriptive and realistic, incorporating provided image URLs where relevant. Fabricate content for a realistic feature or site experience. make sure to use interesting shapes or icons, dont be afraid to draw shapes, but all must be in one html tag space";
   const useImgsPrompt = (imgUrls: string) => `7.find some way to use these images:${imgUrls}`;
   const insertOneImg = ', Find a good way to use this image:'
@@ -26,6 +25,7 @@ export default function Home() {
   }
 
   async function handleImageUpload(event) {
+    setIsLoading(true);
     const file = event.target.files[0];
     if (file) {
       const formData = new FormData();
@@ -42,10 +42,13 @@ export default function Home() {
           const imageDescription = data.choices[0].message.content;
           console.log('imageDescription', imageDescription);
           setImageDescription(imageDescription); // Set state for image description
+          setIsLoading(false);
         }
       } catch (error) {
         console.error('Error uploading image:', error);
+        setIsLoading(false);
       }
+
     }
   }
 
@@ -160,26 +163,26 @@ export default function Home() {
         <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@800&display=swap" rel="stylesheet" />
       </Head>
 
-      {/* Header */}
-      <div className="cold w-full h-10 text-white font-bold text-center pt-3 p-8 pt-10 flex shadow-lg items-center justify-center tracking-wide" style={{ fontFamily: 'Raleway, sans-serif', fontSize: '24px' }}>
-        SiteSee
-      </div>
+      <header className="flex items-center justify-center sand p-4">
+        <div className="flex items-center">
+          <img className="rounded-md" src="sitesee.png" width="50" height="50" alt="Logo" />
+          <h1 className="text-3xl font-bold ml-4" style={{ fontFamily: 'Raleway, sans-serif', fontSize: '24px' }}>SiteSee</h1>
+        </div>
+      </header>
 
-      <div className="flex flex-col b-20 ">
+      <div className="flex flex-col h-auto flex-grow p-8 pb-10 mb-50 bottom-20">
         {!generatedContent && <div className="flex m-10 h-auto sitesy">Your Website Will Appear Here 😆💻</div>}
         {generatedContent &&
-          <div className="flex items-center justify-center rounded-lg p-4">
-            <div className="bg-white shadow-xl rounded-lg w-4/5 transform transition-transform duration-100 hover:scale-105">
+          <div className="flex items-center justify-center rounded-lg p-4 pb-20 mb-20">
+            <div className="bg-white shadow-xl rounded-lg w-4/5 transform transition-transform duration-100 hover:scale-105 mb-20 pb-20">
               <div dangerouslySetInnerHTML={{ __html: generatedContent }}></div>
             </div>
           </div>
         }
-
-
       </div>
 
       {/* Input, Image Prompt, and Submit */}
-      < div className="w-full p-4 subs fixed bottom-0 left-0 border-t rounded-lg h-auto shadow-xl fixed" >
+      < div className="w-full p-4 subs fixed bottom-0 left-0 rounded-lg h-auto shadow-xl fixed" >
         <input
           type="text"
           placeholder="Enter website idea..."
