@@ -160,7 +160,10 @@ export default function Home() {
   return (
     <div className="flex flex-col h-screen sandy">
       <Head>
+        <link rel="icon" href="sitesee.png" /> {/* Path to your favicon */}
         <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@800&display=swap" rel="stylesheet" />
+        <meta property="og:image" content="sitesee.png" />
+
       </Head>
 
       <header className="flex items-center justify-center sand p-4">
