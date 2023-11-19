@@ -103,7 +103,7 @@ export default function Home() {
     const shortenedSiteIdea = getShortenedText(websiteIdea, 300);
     setImagesLoading(true);
     const payload = {
-      model: "gpt-3.5-turbo",
+      model: "gpt-4-1106-preview",
       messages: [
         { role: "system", content: "You are a helpful assistant." },
         { role: "user", content: `Generate a prompt we can use to request dalle to make images that go with this landing page idea for the hero, and 2/3 other sections: ${shortenedSiteIdea}` }
@@ -143,7 +143,7 @@ export default function Home() {
     const combinedPromptContent = promptContent;
 
     const rawContent = await makeAPIRequest({
-      model: "gpt-3.5-turbo",
+      model: "gpt-4-1106-preview",
       messages: [
         { role: "system", content: "You are an html and tailwinds expert that designs beautiful features or full sites using just html and tailwinds, given descriptions of websites or apps and images." },
         { role: "user", content: combinedPromptContent }
